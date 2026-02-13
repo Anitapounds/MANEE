@@ -1,17 +1,27 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, Eye, EyeOff } from "lucide-react";
+import { ChevronLeft, Eye, EyeOff, AlertCircle } from "lucide-react";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
     // Handle login logic here
-    console.log("Log in with:", { email, password });
+    if (email === "demo@example.com" && password === "password") {
+      navigate("/dashboard");
+      return;
+    }
+
+    if (email || password) {
+      setError("Invalid credentials. Please use the demo credentials to log in.");
+    }
   };
 
   // Show continue button when user has typed something
@@ -40,6 +50,21 @@ export default function Login() {
         <p className="text-gray-500 text-sm mb-8">
           Enter your credentials to log in.
         </p>
+
+        {/* Demo Credentials */}
+        <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-lg p-4 mb-6">
+          <p className="font-bold mb-1">For demo purposes:</p>
+          <p>Email: <span className="font-medium">demo@example.com</span></p>
+          <p>Password: <span className="font-medium">password</span></p>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 p-3 rounded-lg bg-red-50 border border-red-200 flex items-center gap-2">
+            <AlertCircle className="w-5 h-5 text-red-500" />
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
